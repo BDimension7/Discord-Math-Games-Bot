@@ -17,7 +17,7 @@ function isNight() {
     var h = lt.getHours()
     if (h < 7 || h > 21) return true;
     return false
-    // return "The local time is " + nd.toLocaleString();
+    // return "Local time is " + nd.toLocaleString();
 }
 function SecondstoTime(seconds) {
     date = new Date(seconds * 1000)
