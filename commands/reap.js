@@ -38,19 +38,19 @@ function setMultiplier() {
     if (!(n % 200)) factor = 8;
     switch (factor) {
         case 2:
-            message = " Double reap!!";
+            message = "Double reap!!";
             break;
         case 3:
-            message = " Triple reap!!!";
+            message = "Triple reap!!!";
             break;
         case 4:
-            message = " Quadruple reap!!!!";
+            message = "Quadruple reap!!!!";
             break;
         case 5:
-            message = " Quintuple reap!!!!!";
+            message = "Quintuple reap!!!!!";
             break;
         case 8:
-            message = " Octuple reap!!!!!!!!";
+            message = "Octuple reap!!!!!!!!";
     }
     return [factor, message]
 }
@@ -72,15 +72,11 @@ db.get("reap_counts").then(reap_counts => {
     message = multiplier[1]
     time_reaped = (time - last_reap_time) * multiplier[0]
     freeReap = setFreeReap()
-    msg.channel.send(`${players}`)
     const sorted_players = Array.from(Array(players.length), (x,i) => i)
-    msg.channel.send(`${sorted_players}`)
     sorted_players.sort(function (a, b) {
         if (scores[a] === scores[b]) return 0;
         return (scores[a] < scores[b]) ? 1: -1
     })
-    msg.channel.send(`${sorted_players}`)
-    msg.channel.send(`the person below you is: ${players[sorted_players[sorted_players.indexOf(players.indexOf(msg.author.username)) + 1]]}`)
     if (!players.includes(msg.author.username)) {
         if (isNight()) var desc = "You're a new player! Beware the anti-night-reaping measures next time! Sleep is important."
         players.push(msg.author.username)
@@ -93,19 +89,31 @@ db.get("reap_counts").then(reap_counts => {
         var color = "AQUA"
         var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)!${message}`
         var desc = !freeReap ? `${SecondstoTime(cooldown)} until next reap.` : "**Free** reap available!"
-    } else if (isNight()) { // night-reaping prevention
-        if (!(Math.floor(Math.random() * 4) % 2)) {
-            var desc = "**WARNING**\nNight-reaper detection has caught you! Reaped time donated to player ranked below you.";
-        } else var desc = "Anti-night-reaper detection has spared you this time! 50% chance of penalty and donating time to player one rank below from 10PM-7AM EST!";
     } else {
         if (time - reap_times[players.indexOf(msg.author.username)] > cooldown * 1000) {
             reap_times[players.indexOf(msg.author.username)] = !freeReap ? time : time - cooldown * 1000
-            scores[players.indexOf(msg.author.username)] += time_reaped
+            if (isNight()) {
+                if (!(Math.floor(Math.random() * 4) % 2)) {
+                    if (players.indexOf(msg.author.username) == players.length - 1) {
+                        var color = "DARK_RED"
+                        var title = `You burned ${time_reaped / 1000} seconds!`
+                        var desc = "**WARNING**\nNight-reaper detection caught you!\nTime burned."
+                    } else {
+                        var color = "GOLD"
+                        var title = `You donated ${time_reaped / 1000} seconds to\n${players[sorted_players[sorted_players.indexOf(players.indexOf(msg.author.username)) + 1]]}!`
+                        var desc = "**WARNING**\nNight-reaper detection caught you!\nTime donated to player ranked below you."
+                        scores[sorted_players[sorted_players.indexOf(players.indexOf(msg.author.username)) + 1]] += time_reaped
+                    }
+                } else {
+                    scores[players.indexOf(msg.author.username)] += time_reaped
+                    var color = "AQUA"
+                    var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)! ${message}`
+                    var desc = !freeReap ? `${SecondstoTime(cooldown)} until next reap.` : "**Free** reap available!"
+                    desc += "\nAnti-night-reaper detection spared you this time!\n50% chance of donating time to player one rank below (10PM-7AM EST)!"
+                }
+            }
             reap_counts[players.indexOf(msg.author.username)] += 1
             db.set("last_reap_time", time)
-            var color = "AQUA"
-            var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)!${message}`
-            var desc = !freeReap ? `${SecondstoTime(cooldown)} until next reap.` : "**Free** reap available!"
         } else {
             var color = "GREY"
             var title = "No reap available!"
@@ -125,7 +133,6 @@ db.get("reap_counts").then(reap_counts => {
     })
     .addField("Score:", `${Math.round(scores[players.indexOf(msg.author.username)] / 1000)} seconds`)
     msg.channel.send({embeds:[reap_msg]})
-    msg.channel.send(`isNight(): ${isNight()}`)
 })
 })
 })

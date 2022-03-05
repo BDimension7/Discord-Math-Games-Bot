@@ -10,7 +10,7 @@ module.exports.run = (client, msg, args) => {
         iconURL: msg.guild.me.displayAvatarURL()
     })
     .addField("Commands", "$reap\n$freap (free reap)\n$lb (leaderboard)\n$clock\n$help\n$info (soon)\n$duel (soon)")
-    .addField("Changelog", "cooldown: 1 hour\nanti-night-reaping measures: 25% chance of -1 and donating points to random other player")
+    .addField("Settings", "cooldown: 1 hour\n50% chance of player ranked below stealing time at night (10PM-7AM EST)")
     msg.channel.send({embeds:[help_msg]})
 }
 exports.name = "help"

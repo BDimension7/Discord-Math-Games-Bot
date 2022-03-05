@@ -40,6 +40,10 @@ client
 //     if (!message.author.bot) return message.channel.send(`"${message.content}" by ${message.author.tag} was deleted.`);
 //     message.channel.send(message.content)
 // })
+client.on("ready", async() => {
+    client.user.setPresence({ activities: [{ name: 'for night reapers', type: 'WATCHING'}], status: 'online' });
+})
+
 client.on("messageCreate", msg => {
     if (msg.author.bot) return;
     if (!msg.content.startsWith(prefix)) return;
@@ -59,4 +63,5 @@ client.on("messageCreate", msg => {
 //     if (tag[0] === "end") {
 //     }
 // })
+
 client.login(process.env.TOKEN)
