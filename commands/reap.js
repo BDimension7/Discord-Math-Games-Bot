@@ -111,6 +111,8 @@ db.get("reap_counts").then(reap_counts => {
                     scores[players.indexOf(msg.author.username)] += time_reaped
                     desc += "\nAnti-night-reaper detection spared you this time!\n50% chance of donating time to player one rank below (10PM-7AM EST)!"
                 }
+            } else {
+                scores[players.indexOf(msg.author.username)] += time_reaped
             }
             reap_counts[players.indexOf(msg.author.username)] += 1
             db.set("last_reap_time", time)
