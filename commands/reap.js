@@ -65,6 +65,8 @@ db.get("last_reap_time").then(last_reap_time => {
 db.get("players").then(players => {
 db.get("scores").then(scores => {
 db.get("reap_times").then(reap_times => {
+    // scores[players.indexOf("Sytonal")] = 10000
+    // db.set("scores", scores)
 db.get("reap_counts").then(reap_counts => {
     if (!last_reap_time) return msg.channel.send("No game running!");
     time = Date.now()
@@ -97,7 +99,7 @@ db.get("reap_counts").then(reap_counts => {
             var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)! ${message}`
             if (isNight()) {
                 if (!(Math.floor(Math.random() * 4) % 2)) {
-                    if (players.indexOf(msg.author.username) == players.length - 1) {
+                    if (sorted_players.indexOf(players.indexOf(msg.author.username)) == sorted_players.length - 1) {
                         color = "DARK_RED"
                         title = `You burned ${time_reaped / 1000} seconds!`
                         desc = "**WARNING**\nNight-reaper detection caught you!\nTime burned."

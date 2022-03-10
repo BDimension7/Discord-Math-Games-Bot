@@ -3,7 +3,6 @@ const Database = require("@replit/database")
 const db = new Database()
 const cooldown = 3600 // seconds
 
-// ADD WARNING IF IT IS NIGHT TIME
 function isNight() {
     var d = new Date();
     var utc = d.getTime() + (d.getTimezoneOffset() * 60000);

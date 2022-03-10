@@ -30,17 +30,20 @@ db.get("reap_counts").then(reap_counts => {
         }
         return (a[1] < b[1]) ? 1: -1
     })
-    var scores_message = "```"
-    var rank = `${player_scores.length + 1}.`
-    var rank_space = rank.length
+    var scores_msg = "```"
+    var rank = `${player_scores.length + 1}. `
+    var max_rank = rank.length
+    var count = `[${Math.max(...reap_counts)}] `
+    var max_count = count.length
     for (j = 0; j < player_scores.length; j++) {
-        rank = `${j + 1}. [${player_scores[j][2]}] `
-        scores_message += rank + duplicate(" ", rank_space - rank.length + 1) + player_scores[j][0] + duplicate(" ", max - player_scores[j][0].length + 1) + player_scores[j][1] + "\n"
+        rank = `${j + 1}. `
+        count = `[${player_scores[j][2]}] `
+        scores_msg += rank + duplicate(" ", max_rank - rank.length) + count + duplicate(" ", max_count - count.length) + player_scores[j][0] + duplicate(" ", max - player_scores[j][0].length + 1) + player_scores[j][1] + "\n"
     }
     let leaderboard = new Discord.MessageEmbed()
     .setColor("PURPLE")
     .setTitle("Leaderboard")
-    .setDescription(scores_message + "```")
+    .setDescription(scores_msg + "```")
     msg.channel.send({embeds:[leaderboard]})
 })
 })
