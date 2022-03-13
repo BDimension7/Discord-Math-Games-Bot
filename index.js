@@ -49,12 +49,10 @@ client.on("messageCreate", msg => {
     if (!msg.content.startsWith(prefix)) return;
     if (!msg.guild.me.permissionsIn(msg.channel).has(Permissions.FLAGS.EMBED_LINKS)) return;
     if (!msg.guild.me.permissionsIn(msg.channel).has(Permissions.FLAGS.SEND_MESSAGES)) return;
-    
     const args = msg.content.slice(prefix.length).trim().split(/ +/g)
     const commandName = args.shift()
     const command = client.commands.get(commandName)
-    
-    if (!command) return msg.channel.send(`$${commandName} command does not exist!`)
+    if (!command) return msg.channel.send(`That command does not exist!`)
     command.run(client, msg, args)
 })
 

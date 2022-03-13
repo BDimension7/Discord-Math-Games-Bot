@@ -90,7 +90,7 @@ db.get("reap_counts").then(reap_counts => {
         db.set("players", players)
         db.set("last_reap_time", time)
         var color = "AQUA"
-        var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)!${message}`
+        var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)! ${message}`
     } else {
         if (time - reap_times[players.indexOf(msg.author.username)] > cooldown * 1000) {
             reap_times[players.indexOf(msg.author.username)] = !freeReap ? time : time - cooldown * 1000
