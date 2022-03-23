@@ -12,12 +12,12 @@ function hasReward(msg) {
     return true
 }
 function isNight() {
-    // var d = new Date();
-    // var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    // var lt = new Date(utc - (3600000 * 5) + 3600000); // local time: EST (UTC+5)
-    // var h = lt.getHours();
-    // if (h < 7 || h > 22) return true;
-    return true;
+    var d = new Date();
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    var lt = new Date(utc - (3600000 * 5) + 3600000); // local time: EST (UTC+5)
+    var h = lt.getHours();
+    if (h < 7 || h > 22) return true;
+    return false;
     // return "Local time is " + nd.toLocaleString();
 }
 function SecondstoTime(seconds) {
