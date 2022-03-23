@@ -8,10 +8,10 @@ const client = new Discord.Client({
 const express = require("express")
 const app = express()
 app.listen(3000, () => {
-    console.log("OPERATIONAL")
+    console.log("ONLINE")
 })
 app.get("/", (req, res) => {
-    res.send("OPERATIONAL")
+    res.send("ONLINE")
 })
 
 const fs = require("fs")

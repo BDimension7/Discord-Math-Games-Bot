@@ -2,6 +2,7 @@ const Discord = require("discord.js")
 const Database = require("@replit/database")
 const db = new Database()
 const cooldown = 3600 // seconds
+const nightTax = 0.7 // 30% tax
 
 function hasReward(msg) {
     role = msg.guild.roles.cache.find((role) => {return role.name === process.env.REWARD_ROLE});
@@ -11,12 +12,12 @@ function hasReward(msg) {
     return true
 }
 function isNight() {
-    var d = new Date();
-    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    var lt = new Date(utc - (3600000 * 5)); // local time: EST (UTC+5)
-    var h = lt.getHours()
-    if (h < 7 || h > 21) return true;
-    return false
+    // var d = new Date();
+    // var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    // var lt = new Date(utc - (3600000 * 5) + 3600000); // local time: EST (UTC+5)
+    // var h = lt.getHours();
+    // if (h < 7 || h > 22) return true;
+    return true;
     // return "Local time is " + nd.toLocaleString();
 }
 function SecondstoTime(seconds) {
@@ -65,7 +66,7 @@ db.get("last_reap_time").then(last_reap_time => {
 db.get("players").then(players => {
 db.get("scores").then(scores => {
 db.get("reap_times").then(reap_times => {
-    // scores[players.indexOf("Sytonal")] = 10000
+    // scores[players.indexOf("timetravelingcat")] = -1
     // db.set("scores", scores)
 db.get("reap_counts").then(reap_counts => {
     if (!last_reap_time) return msg.channel.send("No game running!");
@@ -96,24 +97,25 @@ db.get("reap_counts").then(reap_counts => {
             reap_times[players.indexOf(msg.author.username)] = !freeReap ? time : time - cooldown * 1000
             var desc = !freeReap ? `${SecondstoTime(cooldown)} until next reap.` : "**Free** reap available!"
             var color = "AQUA"
-            var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)! ${message}`
             if (isNight()) {
                 if (!(Math.floor(Math.random() * 4) % 2)) {
                     if (sorted_players.indexOf(players.indexOf(msg.author.username)) == sorted_players.length - 1) {
                         color = "DARK_RED"
-                        title = `You burned ${time_reaped / 1000} seconds!`
+                        var title = `You burned ${time_reaped / 1000} seconds!`
                         desc = "**WARNING**\nNight-reaper detection caught you!\nTime burned."
                     } else {
                         color = "GOLD"
-                        title = `You donated ${time_reaped / 1000} seconds to\n${players[sorted_players[sorted_players.indexOf(players.indexOf(msg.author.username)) + 1]]}!`
+                        var title = `You donated ${time_reaped / 1000} seconds to\n${players[sorted_players[sorted_players.indexOf(players.indexOf(msg.author.username)) + 1]]}!`
                         desc = "**WARNING**\nNight-reaper detection caught you!\nTime donated to player ranked below you."
                         scores[sorted_players[sorted_players.indexOf(players.indexOf(msg.author.username)) + 1]] += time_reaped
                     }
                 } else {
-                    scores[players.indexOf(msg.author.username)] += time_reaped
-                    desc += "\nAnti-night-reaper detection spared you this time!\n50% chance of donating time to player one rank below (10PM-7AM EST)!"
+                    var title = `You reaped ${Math.round(time_reaped / 1000) * nightTax} second(s)! ${message}`
+                    scores[players.indexOf(msg.author.username)] += time_reaped * nightTax
+                    desc += "\nAnti-night-reaper spared you this time!\n30% night tax applied."
                 }
             } else {
+                var title = `You reaped ${Math.round(time_reaped / 1000)} second(s)! ${message}`
                 scores[players.indexOf(msg.author.username)] += time_reaped
             }
             reap_counts[players.indexOf(msg.author.username)] += 1
