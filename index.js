@@ -30,7 +30,7 @@ const db = new Database()
 db.list().then((keys) => {
     console.log(`KEYS: ${keys.join(", ")}`)
 })
-// db.delete("start_time").then(() => {});
+// db.delete("start_time");
 
 client
     .on("debug", console.log)
@@ -40,8 +40,9 @@ client
 //     if (!message.author.bot) return message.channel.send(`"${message.content}" by ${message.author.tag} was deleted.`);
 //     message.channel.send(message.content)
 // })
-client.on("ready", async() => {
-    client.user.setPresence({ activities: [{ name: 'for night reapers', type: 'WATCHING'}], status: 'online' });
+
+client.on("ready", async () => {
+    client.user.setPresence({ activities: [{ name: 'for night reapers', type: 'WATCHING' }], status: 'online' });
 })
 
 client.on("messageCreate", msg => {
